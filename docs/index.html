@@ -67,7 +67,7 @@
       padding:22px;
       border-radius:20px;
       background:linear-gradient(135deg, rgba(122,162,255,0.08), rgba(110,231,200,0.06));
-      border:1px solid rgba(122,162,255,0.22);
+      border:1px solid rgba(122,162,255,0.22));
       color:var(--muted);
     }
 
@@ -102,22 +102,6 @@
       font-size:12px;
     }
 
-    .reviewbox{
-      margin-top:28px;
-      padding:28px;
-      border-radius:22px;
-      border:1px solid rgba(255,210,122,0.35);
-      background:linear-gradient(135deg, rgba(255,210,122,0.07), rgba(122,162,255,0.06));
-    }
-
-    .stars{
-      color:var(--warn);
-      font-size:20px;
-      font-weight:900;
-      letter-spacing:0.12em;
-      margin-bottom:14px;
-    }
-
     .links{
       margin-top:22px;
       display:flex;
@@ -143,15 +127,6 @@
       color:var(--text);
     }
 
-    footer{
-      margin-top:96px;
-      padding-top:32px;
-      border-top:1px solid var(--border);
-      font-size:13px;
-      color:var(--muted);
-      text-align:center;
-    }
-
     .mono{
       font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
       font-size: 12px;
@@ -163,6 +138,15 @@
       overflow:auto;
       margin-top: 14px;
       max-width: 110ch;
+    }
+
+    footer{
+      margin-top:96px;
+      padding-top:32px;
+      border-top:1px solid var(--border);
+      font-size:13px;
+      color:var(--muted);
+      text-align:center;
     }
   </style>
 </head>
@@ -345,7 +329,7 @@ final_state.json</div>
     </div>
 
     <div class="card">
-      <h3>CHAPTER 8 — M&A Diligence Q&amp;A (Router + Retrieval)</h3>
+      <h3>CHAPTER 8 — M&amp;A Diligence Q&amp;A (Router + Retrieval)</h3>
       <p>
         Route questions to the right sub-workflow, retrieve evidence, and answer with provenance.
         The workflow surfaces uncertainty and escalates when evidence is insufficient.
@@ -379,72 +363,6 @@ final_state.json</div>
   </div>
 </section>
 
-<!-- NOTEBOOKS README -->
-<section>
-  <h2>Notebooks folder README</h2>
-
-  <p>
-    The notebooks folder includes its own lightweight README for navigation and local context.
-  </p>
-
-  <div class="grid">
-    <div class="card">
-      <h3>notebooks/readme.md</h3>
-      <p>
-        Quick index of the ten notebooks and expected outputs, colocated with the labs for convenience.
-      </p>
-      <a href="https://github.com/alexdibol/agents-handbook/blob/main/notebooks/readme.md" target="_blank" rel="noopener">
-        Open notebooks/readme.md
-      </a>
-    </div>
-  </div>
-</section>
-
-<!-- REFERENCES -->
-<section>
-  <h2>References (documentation and governance spine)</h2>
-
-  <p>
-    The architecture patterns draw from LangGraph documentation and standard governance references for model risk,
-    risk management, and professional accountability. These are the spine references used across the suite.
-  </p>
-
-  <div class="mono" aria-label="References list">
-1) LangChain, Inc. LangGraph: Graph API overview (documentation). Accessed: 19 Feb 2026.
-2) LangChain, Inc. LangGraph: Use the Graph API (documentation). Accessed: 19 Feb 2026.
-3) LangChain, Inc. LangGraph Reference: Graphs / StateGraph (documentation). Accessed: 19 Feb 2026.
-4) Anthropic. Claude API: API Overview (documentation). Accessed: 19 Feb 2026.
-5) Anthropic. Build with Claude (developer learning resources). Accessed: 19 Feb 2026.
-6) Board of Governors of the Federal Reserve System. SR 11-7: Guidance on Model Risk Management. 4 Apr 2011. Accessed: 19 Feb 2026.
-7) Office of the Comptroller of the Currency (OCC). Supervisory Guidance on Model Risk Management. OCC 2011-12A. 4 Apr 2011. Accessed: 19 Feb 2026.
-8) NIST. Artificial Intelligence Risk Management Framework (AI RMF 1.0). NIST AI 100-1. Jan 2023. Accessed: 19 Feb 2026.
-9) NIST. Generative Artificial Intelligence Profile. NIST AI 600-1. 2024. Accessed: 19 Feb 2026.
-10) COSO. Internal Control—Integrated Framework: Executive Summary. May 2013. Accessed: 19 Feb 2026.
-11) BCBS. Principles for Sound Liquidity Risk Management and Supervision. Sep 2008. Accessed: 19 Feb 2026.
-12) BCBS. Basel III: The Liquidity Coverage Ratio and liquidity risk monitoring tools. BCBS 238. Jan 2013. Accessed: 19 Feb 2026.
-13) BCBS. Principles for effective risk data aggregation and risk reporting (BCBS 239). Jan 2013. Accessed: 19 Feb 2026.
-14) OECD. G20/OECD Principles of Corporate Governance 2023. OECD Publishing, 2023. Accessed: 19 Feb 2026.
-15) SEC. Regulation Best Interest: The Broker-Dealer Standard of Conduct. Release No. 34-86031. 5 Jun 2019. Accessed: 19 Feb 2026.
-16) SEC. Commission Interpretation Regarding Standard of Conduct for Investment Advisers. Release No. IA-5248. 5 Jun 2019. Accessed: 19 Feb 2026.
-17) ESMA. Final Report: MiFID II RTS on order execution policies. 10 Apr 2025. Accessed: 19 Feb 2026.
-18) ESMA. ESMA clarification on certain best execution reporting requirements under MiFID II. 13 Feb 2024. Accessed: 19 Feb 2026.
-19) EU. Directive 2014/65/EU (MiFID II). 15 May 2014. Accessed: 19 Feb 2026.
-20) FINRA. FINRA Rule 2210: Communications with the Public. Accessed: 19 Feb 2026.
-21) FINRA. Communications with the Public Rules: Reference Guide. Sep 2020. Accessed: 19 Feb 2026.
-22) CFA Institute. Standards of Practice Handbook (12th ed.). 2024. Accessed: 19 Feb 2026.
-23) ISO. ISO 31000:2018 — Risk management — Guidelines. 2018. Accessed: 19 Feb 2026.
-24) ISO. ISO/IEC 27001:2022 — Information security management systems — Requirements. 2022. Accessed: 19 Feb 2026.
-25) EU. Regulation (EU) 2024/1689 (Artificial Intelligence Act). 2024. Accessed: 19 Feb 2026.
-26) Almgren, R., and Chriss, N. Optimal Execution of Portfolio Transactions. Working paper, 2000.
-27) Kissell, R. The Science of Algorithmic Trading and Portfolio Management. Academic Press, 2013.
-  </div>
-
-  <div class="callout">
-    <strong>Reminder:</strong> references are provided for context and governance framing.
-    Notebook outputs remain <strong>Not verified</strong> unless independently validated.
-  </div>
-</section>
-
 <!-- DISCLAIMERS -->
 <section>
   <h2>Licensing, Governance & AI Use Disclosure</h2>
@@ -471,4 +389,3 @@ final_state.json</div>
 </main>
 </body>
 </html>
-

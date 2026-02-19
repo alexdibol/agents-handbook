@@ -1,1 +1,474 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+
+  <title>Agents Handbook — Agentic Architectures in Finance (LangGraph-Only)</title>
+  <meta name="description" content="Agents Handbook: governance-first, auditable agentic architectures in finance. One handbook and ten LangGraph-only Colab notebooks implementing explicit state, conditional routing, bounded loops, and mandatory run artifacts (run_manifest.json, graph_spec.json, final_state.json)." />
+
+  <style>
+    :root{
+      --bg:#07080d;
+      --panel:#0f1220;
+      --panel2:#141836;
+      --text:#eef0ff;
+      --muted:#b8bddb;
+      --border:rgba(255,255,255,0.09);
+      --accent:#7aa2ff;
+      --accent2:#6ee7c8;
+      --warn:#ffd27a;
+      --shadow:0 18px 60px rgba(0,0,0,0.45);
+    }
+    *{box-sizing:border-box;}
+    body{
+      margin:0;
+      background:
+        radial-gradient(900px 600px at 20% 10%, rgba(122,162,255,0.14), transparent 60%),
+        radial-gradient(800px 600px at 80% 90%, rgba(110,231,200,0.10), transparent 60%),
+        var(--bg);
+      color:var(--text);
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      line-height:1.75;
+    }
+    a{color:var(--accent);text-decoration:none;}
+    a:hover{color:var(--accent2);text-decoration:underline;}
+    .container{max-width:1180px;margin:0 auto;padding:48px 22px 96px;}
+
+    h1{font-size:40px;margin:0 0 14px;text-transform:uppercase;letter-spacing:0.02em;}
+    h2{font-size:30px;margin:64px 0 14px;}
+    h3{font-size:19px;margin:0 0 10px;}
+    p{color:var(--muted);max-width:110ch;}
+
+    .hero{
+      padding:44px;
+      border-radius:24px;
+      background:linear-gradient(180deg, rgba(20,24,54,0.95), rgba(15,18,32,0.9));
+      border:1px solid var(--border);
+      box-shadow:var(--shadow);
+    }
+
+    .pill{
+      display:inline-block;
+      padding:8px 12px;
+      border-radius:999px;
+      border:1px solid rgba(122,162,255,0.22);
+      background:rgba(122,162,255,0.08);
+      color:var(--muted);
+      font-size:12px;
+      font-weight:800;
+      letter-spacing:0.06em;
+      text-transform:uppercase;
+      margin-top:10px;
+    }
+
+    .callout{
+      margin-top:26px;
+      padding:22px;
+      border-radius:20px;
+      background:linear-gradient(135deg, rgba(122,162,255,0.08), rgba(110,231,200,0.06));
+      border:1px solid rgba(122,162,255,0.22);
+      color:var(--muted);
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+      gap:20px;
+      margin-top:28px;
+    }
+
+    .card{
+      padding:22px;
+      border-radius:20px;
+      background:var(--panel2);
+      border:1px solid var(--border);
+      box-shadow:0 12px 34px rgba(0,0,0,0.32);
+      display:flex;
+      flex-direction:column;
+      min-height:240px;
+    }
+
+    .card p{margin:0;}
+    .card p + p{ margin-top:10px; }
+
+    .card a{
+      display:inline-block;
+      margin-top:auto;
+      padding-top:14px;
+      font-weight:800;
+      letter-spacing:0.03em;
+      text-transform:uppercase;
+      font-size:12px;
+    }
+
+    .reviewbox{
+      margin-top:28px;
+      padding:28px;
+      border-radius:22px;
+      border:1px solid rgba(255,210,122,0.35);
+      background:linear-gradient(135deg, rgba(255,210,122,0.07), rgba(122,162,255,0.06));
+    }
+
+    .stars{
+      color:var(--warn);
+      font-size:20px;
+      font-weight:900;
+      letter-spacing:0.12em;
+      margin-bottom:14px;
+    }
+
+    .links{
+      margin-top:22px;
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+    }
+    .btn{
+      display:inline-block;
+      padding:10px 14px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,0.10);
+      background:rgba(255,255,255,0.04);
+      color:var(--text);
+      font-size:12px;
+      font-weight:800;
+      letter-spacing:0.05em;
+      text-transform:uppercase;
+    }
+    .btn:hover{
+      border-color:rgba(122,162,255,0.35);
+      background:rgba(122,162,255,0.08);
+      text-decoration:none;
+      color:var(--text);
+    }
+
+    footer{
+      margin-top:96px;
+      padding-top:32px;
+      border-top:1px solid var(--border);
+      font-size:13px;
+      color:var(--muted);
+      text-align:center;
+    }
+
+    .mono{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 12px;
+      color: rgba(238,240,255,0.85);
+      background: rgba(0,0,0,0.20);
+      border: 1px solid rgba(255,255,255,0.08);
+      padding: 12px 14px;
+      border-radius: 14px;
+      overflow:auto;
+      margin-top: 14px;
+      max-width: 110ch;
+    }
+  </style>
+</head>
+
+<body>
+<main class="container">
+
+<!-- INTRODUCTION -->
+<section class="hero">
+  <h1>Agents Handbook</h1>
+  <div class="pill">Agentic Architectures in Finance · LangGraph-Only · Governance-First</div>
+
+  <p>
+    <strong>Agents Handbook</strong> is a governed, Colab-first suite for teaching <strong>agentic architectures in finance</strong>
+    using <strong>LangGraph only</strong>. It is deliberately explicit about what it is <em>not</em>: it does not promise correct
+    real-world facts, it does not claim deployability, and it does not treat generated outputs as verified evidence.
+    Its purpose is more demanding and more useful: <strong>mechanism clarity under constraint</strong>.
+    If you cannot explain how state, routing, gates, and bounded loops produce a decision, then “the model decided” is not a workflow.
+    It is a liability.
+  </p>
+
+  <p>
+    Most agent demos over-teach clever prompts and under-teach the thing that matters in professional settings:
+    <strong>control</strong>. Real finance workflows have missing information, suitability boundaries, evidence gaps,
+    escalation paths, and stop rules. This repository makes that structure explicit.
+    Every notebook is intentionally constrained to be reviewable: you can inspect the graph,
+    audit the state transitions, and reconstruct why the system terminated where it did.
+  </p>
+
+  <p>
+    The architectural contract is consistent across the entire suite:
+    <strong>explicit TypedDict state → AgentNode abstraction → conditional routing → bounded loops → termination logic → mandatory artifacts</strong>.
+    Each run produces a compact audit trail that makes the workflow inspectable rather than persuasive:
+    <strong>run_manifest.json</strong>, <strong>graph_spec.json</strong>, and <strong>final_state.json</strong>.
+    Outputs are tagged <strong>Not verified</strong> by design until independently reviewed.
+  </p>
+
+  <div class="callout">
+    <strong>Core premise:</strong> <strong>Capability ↑ ⇒ Risk ↑ ⇒ Controls ↑</strong><br/>
+    This is not “extra process.” This is what makes agentic work defensible.
+  </div>
+
+  <div class="links">
+    <a class="btn" href="https://github.com/alexdibol/agents-handbook" target="_blank" rel="noopener">Repository</a>
+    <a class="btn" href="https://github.com/alexdibol/agents-handbook/tree/main/handbook" target="_blank" rel="noopener">Handbook Folder</a>
+    <a class="btn" href="https://github.com/alexdibol/agents-handbook/tree/main/notebooks" target="_blank" rel="noopener">Notebooks Folder</a>
+  </div>
+</section>
+
+<!-- QUICK LINKS -->
+<section>
+  <h2>What’s inside</h2>
+
+  <p>
+    The repository has two primary components. The handbook is the interpretive layer: mental models, failure modes, and
+    governance posture. The notebooks are the execution layer: ten end-to-end LangGraph workflows that operationalize those
+    concepts with explicit state, routing, and bounded iteration.
+  </p>
+
+  <div class="grid">
+    <div class="card">
+      <h3>The Handbook (written layer)</h3>
+      <p>
+        Architecture notes and governance framing that explain what each workflow is doing, why the controls exist,
+        and how to read the run artifacts as a reviewer. The goal is to prevent “graph theater” by making the
+        control logic and failure modes legible.
+      </p>
+      <a href="https://github.com/alexdibol/agents-handbook/tree/main/handbook" target="_blank" rel="noopener">
+        Open Handbook Folder
+      </a>
+    </div>
+
+    <div class="card">
+      <h3>The Notebooks (execution layer)</h3>
+      <p>
+        Ten Colab notebooks that implement canonical finance workflows as governed agent graphs.
+        Each notebook uses LangGraph only and enforces an invariant: TypedDict state, conditional routing,
+        bounded loops, early termination, and mandatory exported artifacts per run.
+      </p>
+      <a href="https://github.com/alexdibol/agents-handbook/tree/main/notebooks" target="_blank" rel="noopener">
+        Open Notebooks Folder
+      </a>
+    </div>
+
+    <div class="card">
+      <h3>Non-negotiable artifacts</h3>
+      <p>
+        Every run exports a compact audit bundle that makes behavior reconstructible.
+        This is the minimum standard for professional reviewability.
+      </p>
+      <div class="mono">run_manifest.json
+graph_spec.json
+final_state.json</div>
+      <a href="https://github.com/alexdibol/agents-handbook" target="_blank" rel="noopener">
+        View Repository Root
+      </a>
+    </div>
+  </div>
+
+  <div class="callout">
+    <strong>API key posture:</strong> notebooks are written for Colab and read credentials via
+    <span class="mono" style="display:inline-block;margin:0 6px;padding:2px 8px;border-radius:10px;">userdata.get("ANTHROPIC_API_KEY")</span>
+    (Colab Secrets). Avoid pasting keys into cells or logs.
+  </div>
+</section>
+
+<!-- NOTEBOOKS -->
+<section>
+  <h2>The Ten Finance Workflows (LangGraph-Only Colab Notebooks)</h2>
+
+  <p>
+    Each notebook is a finance objective mapped to an agentic pattern. The content is intentionally architecture-heavy:
+    nodes, state transitions, gates, bounded loops, and termination reasons. This teaches how a real team would structure
+    a governed workflow rather than how to “get an answer.”
+  </p>
+
+  <div class="grid">
+
+    <div class="card">
+      <h3>CHAPTER 1 — Personal Finance Triage (Missing-Info Loop)</h3>
+      <p>
+        Intake and triage as a control loop: discover missing fields, request only what is necessary, and stop when
+        sufficiency is reached or retries are exhausted. The point is disciplined information discovery with bounded iteration.
+      </p>
+      <a href="https://github.com/alexdibol/agents-handbook/blob/main/notebooks/CHAPTER_1.ipynb" target="_blank" rel="noopener">Open Notebook</a>
+    </div>
+
+    <div class="card">
+      <h3>CHAPTER 2 — Suitability Boundary (Refuse / Redirect)</h3>
+      <p>
+        Hard branching and early termination for suitability and scope boundaries.
+        Enforces a refusal posture where required and routes toward safer alternatives when appropriate.
+      </p>
+      <a href="https://github.com/alexdibol/agents-handbook/blob/main/notebooks/CHAPTER_2.ipynb" target="_blank" rel="noopener">Open Notebook</a>
+    </div>
+
+    <div class="card">
+      <h3>CHAPTER 3 — Credit Memo Drafting (Evidence-Gap Critique Loop)</h3>
+      <p>
+        Drafting as governed synthesis: generate a memo, critique for unsupported claims, and iterate to surface evidence gaps.
+        Outputs explicitly separate facts, assumptions, and open items to support review.
+      </p>
+      <a href="https://github.com/alexdibol/agents-handbook/blob/main/notebooks/CHAPTER_3.ipynb" target="_blank" rel="noopener">Open Notebook</a>
+    </div>
+
+    <div class="card">
+      <h3>CHAPTER 4 — Trading Hypothesis + Backtest Wrapper (Tool-Augmented Node)</h3>
+      <p>
+        Hypothesis formation integrated with a test harness and diagnostics. The workflow treats backtests as
+        diagnostics, not evidence, and forces a gate decision (promote / revise / reject).
+      </p>
+      <a href="https://github.com/alexdibol/agents-handbook/blob/main/notebooks/CHAPTER_4.ipynb" target="_blank" rel="noopener">Open Notebook</a>
+    </div>
+
+    <div class="card">
+      <h3>CHAPTER 5 — Execution Tactics Under Liquidity (Regime Machine)</h3>
+      <p>
+        Stateful execution under changing liquidity/volatility regimes. Tactics adapt to regime while respecting
+        bounded steps and explicit termination logic (pause, slow, slice, escalate).
+      </p>
+      <a href="https://github.com/alexdibol/agents-handbook/blob/main/notebooks/CHAPTER_5.ipynb" target="_blank" rel="noopener">Open Notebook</a>
+    </div>
+
+    <div class="card">
+      <h3>CHAPTER 6 — Portfolio Rebalancing (Parallel Committee + Aggregation)</h3>
+      <p>
+        Multiple perspectives evaluate the same rebalance (risk, cost, constraints) in parallel.
+        An aggregator reconciles outputs and records disagreements rather than hiding them.
+      </p>
+      <a href="https://github.com/alexdibol/agents-handbook/blob/main/notebooks/CHAPTER_6.ipynb" target="_blank" rel="noopener">Open Notebook</a>
+    </div>
+
+    <div class="card">
+      <h3>CHAPTER 7 — IB Pitchbook (Hub-and-Spoke Constellation)</h3>
+      <p>
+        A hub coordinates section agents for comps, rationale, risks, and narrative cohesion.
+        The hub enforces completeness checks and flags missing inputs rather than improvising certainty.
+      </p>
+      <a href="https://github.com/alexdibol/agents-handbook/blob/main/notebooks/CHAPTER_7.ipynb" target="_blank" rel="noopener">Open Notebook</a>
+    </div>
+
+    <div class="card">
+      <h3>CHAPTER 8 — M&A Diligence Q&amp;A (Router + Retrieval)</h3>
+      <p>
+        Route questions to the right sub-workflow, retrieve evidence, and answer with provenance.
+        The workflow surfaces uncertainty and escalates when evidence is insufficient.
+      </p>
+      <a href="https://github.com/alexdibol/agents-handbook/blob/main/notebooks/CHAPTER_8.ipynb" target="_blank" rel="noopener">Open Notebook</a>
+    </div>
+
+    <div class="card">
+      <h3>CHAPTER 9 — Treasury Monitoring (Event-Driven Workflow)</h3>
+      <p>
+        Covenant and liquidity monitoring as an event-driven agentic system.
+        Detect breaches, produce escalation-ready outputs, and keep the run reconstructible for oversight.
+      </p>
+      <a href="https://github.com/alexdibol/agents-handbook/blob/main/notebooks/CHAPTER_9.ipynb" target="_blank" rel="noopener">Open Notebook</a>
+    </div>
+
+    <div class="card">
+      <h3>CHAPTER 10 — Multi-Desk Research Synthesis (Supervised + Red-Team)</h3>
+      <p>
+        A supervised multi-agent synthesis workflow with an explicit red-team pass.
+        The goal is not consensus; it is a publish gate supported by objections, gaps, and review hooks.
+      </p>
+      <a href="https://github.com/alexdibol/agents-handbook/blob/main/notebooks/CHAPTER_10.ipynb" target="_blank" rel="noopener">Open Notebook</a>
+    </div>
+
+  </div>
+
+  <div class="callout">
+    <strong>Notebook invariant:</strong> LangGraph-only · explicit TypedDict state · AgentNode abstraction · conditional routing · bounded loops ·
+    Mermaid graph render · mandatory exports: <strong>run_manifest.json</strong>, <strong>graph_spec.json</strong>, <strong>final_state.json</strong>.
+  </div>
+</section>
+
+<!-- NOTEBOOKS README -->
+<section>
+  <h2>Notebooks folder README</h2>
+
+  <p>
+    The notebooks folder includes its own lightweight README for navigation and local context.
+  </p>
+
+  <div class="grid">
+    <div class="card">
+      <h3>notebooks/readme.md</h3>
+      <p>
+        Quick index of the ten notebooks and expected outputs, colocated with the labs for convenience.
+      </p>
+      <a href="https://github.com/alexdibol/agents-handbook/blob/main/notebooks/readme.md" target="_blank" rel="noopener">
+        Open notebooks/readme.md
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- REFERENCES -->
+<section>
+  <h2>References (documentation and governance spine)</h2>
+
+  <p>
+    The architecture patterns draw from LangGraph documentation and standard governance references for model risk,
+    risk management, and professional accountability. These are the spine references used across the suite.
+  </p>
+
+  <div class="mono" aria-label="References list">
+1) LangChain, Inc. LangGraph: Graph API overview (documentation). Accessed: 19 Feb 2026.
+2) LangChain, Inc. LangGraph: Use the Graph API (documentation). Accessed: 19 Feb 2026.
+3) LangChain, Inc. LangGraph Reference: Graphs / StateGraph (documentation). Accessed: 19 Feb 2026.
+4) Anthropic. Claude API: API Overview (documentation). Accessed: 19 Feb 2026.
+5) Anthropic. Build with Claude (developer learning resources). Accessed: 19 Feb 2026.
+6) Board of Governors of the Federal Reserve System. SR 11-7: Guidance on Model Risk Management. 4 Apr 2011. Accessed: 19 Feb 2026.
+7) Office of the Comptroller of the Currency (OCC). Supervisory Guidance on Model Risk Management. OCC 2011-12A. 4 Apr 2011. Accessed: 19 Feb 2026.
+8) NIST. Artificial Intelligence Risk Management Framework (AI RMF 1.0). NIST AI 100-1. Jan 2023. Accessed: 19 Feb 2026.
+9) NIST. Generative Artificial Intelligence Profile. NIST AI 600-1. 2024. Accessed: 19 Feb 2026.
+10) COSO. Internal Control—Integrated Framework: Executive Summary. May 2013. Accessed: 19 Feb 2026.
+11) BCBS. Principles for Sound Liquidity Risk Management and Supervision. Sep 2008. Accessed: 19 Feb 2026.
+12) BCBS. Basel III: The Liquidity Coverage Ratio and liquidity risk monitoring tools. BCBS 238. Jan 2013. Accessed: 19 Feb 2026.
+13) BCBS. Principles for effective risk data aggregation and risk reporting (BCBS 239). Jan 2013. Accessed: 19 Feb 2026.
+14) OECD. G20/OECD Principles of Corporate Governance 2023. OECD Publishing, 2023. Accessed: 19 Feb 2026.
+15) SEC. Regulation Best Interest: The Broker-Dealer Standard of Conduct. Release No. 34-86031. 5 Jun 2019. Accessed: 19 Feb 2026.
+16) SEC. Commission Interpretation Regarding Standard of Conduct for Investment Advisers. Release No. IA-5248. 5 Jun 2019. Accessed: 19 Feb 2026.
+17) ESMA. Final Report: MiFID II RTS on order execution policies. 10 Apr 2025. Accessed: 19 Feb 2026.
+18) ESMA. ESMA clarification on certain best execution reporting requirements under MiFID II. 13 Feb 2024. Accessed: 19 Feb 2026.
+19) EU. Directive 2014/65/EU (MiFID II). 15 May 2014. Accessed: 19 Feb 2026.
+20) FINRA. FINRA Rule 2210: Communications with the Public. Accessed: 19 Feb 2026.
+21) FINRA. Communications with the Public Rules: Reference Guide. Sep 2020. Accessed: 19 Feb 2026.
+22) CFA Institute. Standards of Practice Handbook (12th ed.). 2024. Accessed: 19 Feb 2026.
+23) ISO. ISO 31000:2018 — Risk management — Guidelines. 2018. Accessed: 19 Feb 2026.
+24) ISO. ISO/IEC 27001:2022 — Information security management systems — Requirements. 2022. Accessed: 19 Feb 2026.
+25) EU. Regulation (EU) 2024/1689 (Artificial Intelligence Act). 2024. Accessed: 19 Feb 2026.
+26) Almgren, R., and Chriss, N. Optimal Execution of Portfolio Transactions. Working paper, 2000.
+27) Kissell, R. The Science of Algorithmic Trading and Portfolio Management. Academic Press, 2013.
+  </div>
+
+  <div class="callout">
+    <strong>Reminder:</strong> references are provided for context and governance framing.
+    Notebook outputs remain <strong>Not verified</strong> unless independently validated.
+  </div>
+</section>
+
+<!-- DISCLAIMERS -->
+<section>
+  <h2>Licensing, Governance & AI Use Disclosure</h2>
+
+  <div class="callout">
+    <p><strong>Educational / Non-Reliance:</strong> All materials are provided for educational and research purposes only.
+    Nothing here constitutes investment, trading, legal, tax, accounting, audit, compliance, or operational advice.</p>
+
+    <p><strong>Not verified by default:</strong> Unless explicitly stated otherwise in a particular artifact, treat all outputs,
+    claims, calculations, citations, and conclusions as <strong>Not verified</strong>.</p>
+
+    <p><strong>Confidentiality and data hygiene:</strong> Do not paste confidential, proprietary, regulated, or personally identifying information
+    into external systems. Use anonymization/redaction and minimum-necessary inputs by default.</p>
+
+    <p><strong>AI use disclosure:</strong> Generative AI tools may have been used to assist drafting, editing, formatting, or code scaffolding.
+    Conceptual design, governance decisions, and final approval are human-led. Responsibility remains with the human professional.</p>
+  </div>
+</section>
+
+<footer>
+  Agents Handbook · Agentic Architectures in Finance · LangGraph-Only · Governance-First
+</footer>
+
+</main>
+</body>
+</html>
 
